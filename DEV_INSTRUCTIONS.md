@@ -394,3 +394,21 @@ Next Features
 - Story mode missions fully playable with rewards
 - PvE AI advanced abilities & multi-wave bosses
 - Rank Wars squad PvP
+
+WORLD TRIGGER DISCORD BOT DEV MEMORY (UPDATED)
+
+Story Mode
+-----------
+- Events lead to one big arc
+- Missions: Arena, Choice, Exploration
+- Arena: PvE multi-neighbor integration with triggers
+- Choice events: branching rewards, flavor text, minor influence
+- Exploration: narrative, minor rewards
+- Rewards: Credits, Spins, sometimes Triggers (boss missions)
+- Embeds: Turquoise + emojis
+- Replayable missions for rare drops or farming
+- PV missions like "save civilians" implemented as arena battles with extra reward logic
+- Database tables: story_progress, story_missions
+- Commands: /story (view mission), /mission (start mission)
+- Mission progression tracked; non-replayable missions auto-progress
+- Fully integrated with economy, loadouts, and profile system
