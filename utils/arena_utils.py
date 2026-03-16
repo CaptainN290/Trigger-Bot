@@ -22,3 +22,20 @@ def calculate_damage(trion, side_effect):
 
     damage = base + random.randint(0, 10) + buff
     return damage
+
+ # Trigger buffs
+    if triggers:
+        for trig in triggers:
+            if trig == "Grasshopper":
+                buff += 5  # Mobility bonus
+            elif trig == "Escudo":
+                buff += 3  # Defensive bonus
+            elif trig == "Spider":
+                buff += 4
+            elif trig == "Bagworm":
+                buff += 6  # Stealth bonus
+            elif trig == "Chameleon":
+                buff += 7  # Evasion bonus
+
+    damage = base + random.randint(0,10) + buff
+    return damage
