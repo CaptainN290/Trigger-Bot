@@ -87,6 +87,22 @@ async def init_db():
 
         await db.commit()
 
+import aiosqlite
+from populate_story import populate_story  # import the script as a function
+
+DB_NAME = "world_trigger.db"
+
+async def setup_database(bot):
+    async with aiosqlite.connect(DB_NAME) as db:
+        # Create all tables (agents, story, triggers, etc.)
+        await init_db()
+
+        # Populate story missions if empty
+        cursor = await db.execute("SELECT COUNT(*) FROM story_missions")
+        count = await cursor.fetchone()
+        if count[0] == 0:
+            await populate_story(db)  # now everything is on server
+
 # Call this when the bot starts
 async def setup_database(bot):
     await init_db()
