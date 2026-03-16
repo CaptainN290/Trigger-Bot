@@ -111,3 +111,207 @@ Every time new commands are added:
 2. Use slash commands
 3. Update database if new data is required
 4. Update DEV_INSTRUCTIONS.md
+
+🌐 WORLD TRIGGER DISCORD BOT DEV MEMORY (UPDATED)
+
+Language: Python
+Library: discord.py
+Commands: Slash Commands ONLY
+Hosting: Render or Wispbyte
+Database: SQLite using aiosqlite
+
+Project Structure
+bot.py
+config.py
+database.py
+requirements.txt
+
+cogs/
+    agent.py
+    profile.py
+    spin.py
+    arena.py
+    leaderboard.py
+    codes.py
+
+data/
+    trion.py
+    side_effects.py
+    neighbors.py
+    triggers.py
+
+utils/
+    elo.py
+    arena_utils.py
+Commands Implemented
+1️⃣ /joinborder — agent.py
+
+Registers a new Border agent
+
+Generates Trion and optional Side Effect
+
+Gives starting Spins = 5
+
+Saves user to SQLite
+
+2️⃣ /profile — profile.py
+
+Shows agent stats: Trion, Side Effect, Spins, Credits, ELO, Wins/Losses
+
+Professional embed
+
+Works for any registered agent
+
+3️⃣ /spin — spin.py
+
+Consumes 1 spin
+
+Randomly rerolls Trion or Side Effect
+
+Updates database
+
+Shows embed/log of old → new values
+
+4️⃣ /leaderboard — leaderboard.py
+
+Shows top 10 agents by ELO
+
+Embedded display
+
+Fetches real usernames
+
+5️⃣ /arena — arena.py
+
+Solo Arena PvP system
+
+Queue-based matchmaking
+
+Fallback PvE AI if no player found
+
+Uses Trion + Side Effect to calculate damage
+
+ELO updated per battle (+25 win / -25 loss)
+
+Sends battle log embeds to participants
+
+PvE AI now uses canonical Neighbor types
+
+Supports Trigger buffs (Grasshopper, Escudo, Spider, Bagworm, Chameleon)
+
+PvE fights use random Neighbor from data/neighbors.py
+
+Data Systems Implemented
+Trion System — trion.py
+
+Canon range: 2–38
+
+Randomized rolls with rarity distribution
+
+Side Effects — side_effects.py
+
+60% chance to obtain
+
+Common (85%) / Rare (15%)
+
+Each side effect gives stat buffs
+
+Neighbor Types — neighbors.py
+
+Real Neighbor types with HP/Damage stats
+
+Random selection for PvE AI
+
+Triggers — triggers.py
+
+Buff system added in arena_utils.py
+
+Each trigger provides a combat bonus
+
+Utility Functions
+elo.py
+
+win_elo() / lose_elo() for simple ELO calculation
+
+arena_utils.py
+
+calculate_damage(trion, side_effect, triggers)
+
+Applies Trion base, Side Effect buffs, and Trigger buffs
+
+Randomized minor variation
+
+Solo Arena Details
+
+PvP first: searches queue for real players
+
+Fallback PvE: fights canonical Neighbor if no player available
+
+Cooldown (to be added): prevents spamming
+
+Battle logs: embedded and sent to all participants
+
+ELO update: automatic
+
+Win/loss update: automatic
+
+Next Commands / Features to Add
+
+Cooldown system for /arena
+
+Trigger shop — purchase triggers with credits
+
+Loadout system — equip triggers before fights
+
+PvE AI enhancements — multiple neighbors or waves
+
+Story Mode — missions and arcs from the anime
+
+Rank Wars — squad battles, rare events
+
+/redeem — code system for spins/credits (already started, can expand)
+
+Mission system — daily/weekly quests for spins/credits
+
+Profile cards / visual embeds — prettier, image-based profiles
+
+Things to Fix / Improve
+
+/arena currently does not implement cooldown (prevents spam)
+
+PvE AI is single neighbor, can be multi-wave or include abilities
+
+Damage calculation is simplified, can be improved with triggers & buffs stacking
+
+/spin could later allow multiple spins at once
+
+/leaderboard could support pages if >10 players
+
+Add error handling for disconnected users / DMs in arena
+
+Development Rules
+
+All new commands go inside a Cog
+
+Must be slash commands
+
+Update database if new data is required
+
+Update DEV_MEMORY after each major feature
+
+Keep PvP as primary, PvE fallback if no players
+
+Embed all messages for professional look
+
+Store persistent data in SQLite (aiosqlite)
+
+✅ At this point, the bot has:
+
+Playable PvP / PvE Solo Arena
+
+ELO system with leaderboard
+
+Agent creation, profile, spins
+
+Trigger buffs affecting combat
+
+Canonical Neighbor types for PvE
