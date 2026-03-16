@@ -18,6 +18,9 @@ async def load_cogs():
     await bot.load_extension("cogs.profile")
     await bot.load_extension("cogs.arena")
     await bot.load_extension("cogs.codes")
+    await bot.load_extension("cogs.profile")
+    await bot.load_extension("cogs.spin")
+    await bot.load_extension("cogs.leaderboard")
 
 @bot.event
 async def on_ready():
