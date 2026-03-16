@@ -9,6 +9,10 @@ import random
 
 class Arena(commands.Cog):
 
+    # Add at the top of the class
+self.cooldowns = {}  # user_id: timestamp
+COOLDOWN_SECONDS = 30
+
     def __init__(self, bot):
         self.bot = bot
         self.queue = []
@@ -27,6 +31,24 @@ class Arena(commands.Cog):
             await interaction.response.send_message("You have not joined Border yet! Use /joinborder.", ephemeral=True)
             return
 
+import time
+
+# Check cooldown
+now = time.time()
+last = self.cooldowns.get(user_id, 0)
+if now - last < COOLDOWN_SECONDS:
+    await interaction.response.send_message(
+        embed=discord.Embed(
+            title="⏳ Arena Cooldown",
+            description=f"You are on cooldown! Please wait {int(COOLDOWN_SECONDS - (now - last))} seconds.",
+            color=0xe67e22
+        ),
+        ephemeral=True
+    )
+    return
+
+self.cooldowns[user_id] = now
+        
         await interaction.response.send_message(f"{username} has entered the Solo Arena queue...", ephemeral=False)
 
         # Add player to queue
