@@ -315,3 +315,82 @@ Agent creation, profile, spins
 Trigger buffs affecting combat
 
 Canonical Neighbor types for PvE
+
+WORLD TRIGGER DISCORD BOT DEV MEMORY (UPDATED)
+
+Language: Python
+Library: discord.py
+Commands: Slash Commands ONLY
+Hosting: Render or Wispbyte
+Database: SQLite using aiosqlite
+
+Project Structure
+bot.py config.py database.py requirements.txt
+
+cogs/
+    agent.py
+    profile.py  # updated with visual profile cards + triggers
+    spin.py
+    arena.py    # updated with cooldown, PvP queue, PvE multi-neighbor, triggers
+    leaderboard.py
+    codes.py
+    shop.py
+    loadout.py
+    story.py
+
+data/
+    trion.py
+    side_effects.py
+    neighbors.py
+    triggers.py
+
+utils/
+    elo.py
+    arena_utils.py
+
+Game Systems
+Agents
+Trion, Side Effect, Spins, Credits, ELO, Wins, Losses
+Trion Range: 2-6 low, 7-12 avg, 13-20 high, 21-38 extremely rare
+Side Effects: 60% chance, common/rare, provide stat buffs
+Spins: reroll Trion or Side Effect
+Triggers: buy in shop, equip in loadout, buffs applied in battle
+
+Game Modes
+Story Mode, Missions, Solo Arena, Rank Wars
+
+Solo Arena
+PvP first, PvE fallback
+Cooldown: 30s
+Damage uses Trion, Side Effect, Equipped Triggers
+PvE: multi-neighbor waves
+ELO: +25 win, -25 loss
+Battle logs embedded
+
+Loadout System
+Equip up to 3 triggers
+Use /loadout to view, /equip to add
+Trigger buffs applied in combat
+
+Visual Profile Cards
+Embed with avatar, stats, triggers
+Turquoise embed color
+
+Story Mode
+/ story to start arc
+/ mission to complete tasks
+Rewards: Spins, Credits, Triggers
+
+Economy
+Credits buy triggers: Grasshopper, Escudo, Spider, Bagworm, Chameleon
+
+Commands Implemented
+/joinborder, /profile, /spin, /leaderboard, /arena, /shop, /buytrigger
+/loadout, /equip, /story, /mission
+
+Next Features
+- Redeem code system fully integrated with spins/credits
+- Profile cards with image generation for stats & triggers
+- Story mode missions fully playable with rewards
+- PvE AI advanced abilities & multi-wave bosses
+- Rank Wars squad PvP
