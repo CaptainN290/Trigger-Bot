@@ -5,7 +5,6 @@ import aiosqlite
 from database import DB_NAME
 
 class Profile(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -19,26 +18,41 @@ class Profile(commands.Cog):
                 (user_id,)
             )
             data = await cursor.fetchone()
+            # Fetch equipped triggers
+            cursor2 = await db.execute(
+                "SELECT trigger FROM loadouts WHERE user_id=?", (user_id,)
+            )
+            triggers = [row[0] for row in await cursor2.fetchall()]
 
         if not data:
-            await interaction.response.send_message("You have not joined Border yet. Use /joinborder first!", ephemeral=True)
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Not Registered",
+                    description="You have not joined Border yet! Use /joinborder.",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
             return
 
         trion, side, spins, credits, elo, wins, losses = data
 
         embed = discord.Embed(
             title=f"{interaction.user.display_name}'s Agent Profile",
-            color=0x3498db
+            color=0x1abc9c
         )
-
+        embed.set_thumbnail(url=interaction.user.avatar.url)
         embed.add_field(name="Trion Level", value=trion, inline=True)
         embed.add_field(name="Side Effect", value=side if side else "None", inline=True)
         embed.add_field(name="Spins", value=spins, inline=True)
         embed.add_field(name="Credits", value=credits, inline=True)
         embed.add_field(name="ELO", value=elo, inline=True)
         embed.add_field(name="Wins / Losses", value=f"{wins} / {losses}", inline=True)
+        embed.add_field(name="Equipped Triggers", value=", ".join(triggers) if triggers else "None", inline=False)
+        embed.set_footer(text="Use /spin to reroll Trion or Side Effect. /loadout to manage triggers.")
 
         await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
+    await bot.add_cog(Profile(bot))
     await bot.add_cog(Profile(bot))
