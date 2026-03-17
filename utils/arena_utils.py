@@ -67,11 +67,6 @@ async def calculate_damage(user_id, trion, side_effect=None, triggers=None, stat
                     elif stat == "perception":
                         buff += value * 2
 
-# Get mastery level
-cursor = await db.execute(
-    "SELECT level FROM trigger_mastery WHERE user_id=? AND trigger=?",
-    (user_id, trig_name)
-)
 result = await cursor.fetchone()
 level = result[0] if result else 1
 
