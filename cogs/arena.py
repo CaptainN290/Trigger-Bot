@@ -130,8 +130,8 @@ stats1 = {
 # AI stats (basic)
 stats2 = {"attack": 1, "defense": 1, "mobility": 1, "intelligence": 1, "trion_control": 1, "perception": 1}
 
-dmg1 = calculate_damage(trion1, side1, triggers1, stats1)
-dmg2 = calculate_damage(trion2, side2, [], stats2)
+dmg1 = await calculate_damage(user1.id, trion1, side1, triggers1, stats1)
+dmg2 = await calculate_damage(user2.id, trion2, side2, [], stats2)
 
 # Give XP to used triggers
 async with aiosqlite.connect(DB_NAME) as db:
