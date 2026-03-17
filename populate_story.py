@@ -1,6 +1,6 @@
 import aiosqlite
 import json
-from db_config import DB_NAME
+from config import DB_NAME
 
 async def populate_story():
     async with aiosqlite.connect(DB_NAME) as db:
