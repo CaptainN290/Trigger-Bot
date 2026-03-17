@@ -3,7 +3,7 @@ import os
 from discord import app_commands
 from discord.ext import commands
 import aiosqlite
-from database import DB_NAME
+from db_config import DB_NAME
 import requests
 from io import BytesIO
 from utils.profile_card import generate_profile_card
