@@ -97,8 +97,8 @@ class Arena(commands.Cog):
             await self.start_battle(interaction.user, player, ai_name, ai_stats, pvp=False)
 
     async def start_battle(self, user1, stats1, user2, stats2, pvp=True):
-    trion1, side1, elo1, wins1, losses1 = stats1
-    trion2, side2, elo2, wins2, losses2 = stats2
+        trion1, side1, elo1, wins1, losses1 = stats1
+        trion2, side2, elo2, wins2, losses2 = stats2
 
     import json
 
