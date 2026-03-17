@@ -12,18 +12,28 @@ bot = commands.Bot(
     intents=intents
 )
 
+COGS = [
+    "cogs.agent",
+    "cogs.profile",
+    "cogs.arena",
+    "cogs.codes",
+    "cogs.spin",
+    "cogs.leaderboard",
+    "cogs.loadout",
+    "cogs.shop",
+    "cogs.squads",
+    "cogs.stats",
+    "cogs.story"
+]
+
 async def load_cogs():
-    await bot.load_extension("cogs.agent")
-    await bot.load_extension("cogs.profile")
-    await bot.load_extension("cogs.arena")
-    await bot.load_extension("cogs.codes")
-    await bot.load_extension("cogs.spin")
-    await bot.load_extension("cogs.leaderboard")
-    await bot.load_extension("cogs.loadout")
-    await bot.load_extension("cogs.shop")
-    await bot.load_extension("cogs.squads")
-    await bot.load_extension("cogs.stats")
-    await bot.load_extension("cogs.story")
+    for cog in COGS:
+        print(f"Loading {cog}...")
+        try:
+            await bot.load_extension(cog)
+            print(f"✅ Loaded {cog}")
+        except Exception as e:
+            print(f"❌ Failed {cog}: {e}")
 
 @bot.event
 async def on_message(message):
@@ -59,8 +69,10 @@ async def main():
 
     try:
         async with bot:
+            print("📦 Loading cogs...")
             await load_cogs()
-            print("✅ Cogs loaded, starting bot...")
+
+            print("🔥 Starting Discord connection...")
             await bot.start(TOKEN)
 
     except Exception as e:
