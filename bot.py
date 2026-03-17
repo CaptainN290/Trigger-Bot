@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 
 from config import TOKEN
-from database import setup_db
+from db_config import setup_db
 
 intents = discord.Intents.default()
 
