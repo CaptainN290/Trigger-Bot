@@ -45,6 +45,7 @@ class Arena(commands.Cog):
                 (user_id,)
             )
             player = await cursor.fetchone()
+
         if not player:
             await interaction.response.send_message(
                 embed=discord.Embed(
@@ -97,103 +98,99 @@ class Arena(commands.Cog):
             await self.start_battle(interaction.user, player, ai_name, ai_stats, pvp=False)
 
     async def start_battle(self, user1, stats1, user2, stats2, pvp=True):
+        # Unpack stats
         trion1, side1, elo1, wins1, losses1 = stats1
         trion2, side2, elo2, wins2, losses2 = stats2
 
-    import json
+        # Parse side effects
+        side1 = json.loads(side1) if side1 else None
+        side2 = json.loads(side2) if side2 else None
 
-    # FIX side effects
-    side1 = json.loads(side1) if side1 else None
-    side2 = json.loads(side2) if side2 else None
+        # Get user1 triggers and stats from DB
+        async with aiosqlite.connect(DB_NAME) as db:
+            cursor = await db.execute(
+                "SELECT trigger FROM loadouts WHERE user_id=?",
+                (user1.id,)
+            )
+            triggers1 = [row[0] for row in await cursor.fetchall()]
 
-    async with aiosqlite.connect(DB_NAME) as db:
+            cursor = await db.execute(
+                "SELECT attack, defense, mobility, intelligence, trion_control, perception FROM agent_stats WHERE user_id=?",
+                (user1.id,)
+            )
+            s = await cursor.fetchone()
 
-        # Get triggers
-        cursor = await db.execute(
-            "SELECT trigger FROM loadouts WHERE user_id=?",
-            (user1.id,)
-        )
-        triggers1 = [row[0] for row in await cursor.fetchall()]
+        stats1_dict = {
+            "attack": s[0],
+            "defense": s[1],
+            "mobility": s[2],
+            "intelligence": s[3],
+            "trion_control": s[4],
+            "perception": s[5],
+        }
 
-        # Get stats
-        cursor = await db.execute(
-            "SELECT attack, defense, mobility, intelligence, trion_control, perception FROM agent_stats WHERE user_id=?",
-            (user1.id,)
-        )
-        s = await cursor.fetchone()
+        # Default AI stats if PvE
+        stats2_dict = {"attack":1,"defense":1,"mobility":1,"intelligence":1,"trion_control":1,"perception":1}
 
-    stats1 = {
-        "attack": s[0],
-        "defense": s[1],
-        "mobility": s[2],
-        "intelligence": s[3],
-        "trion_control": s[4],
-        "perception": s[5],
-    }
+        # Calculate damage
+        dmg1 = await calculate_damage(user1.id, trion1, side1, triggers1, stats1_dict)
+        dmg2 = await calculate_damage(user1.id, trion2, side2, [], stats2_dict)
 
-    stats2 = {"attack":1,"defense":1,"mobility":1,"intelligence":1,"trion_control":1,"perception":1}
+        # Battle log
+        name1 = user1.display_name
+        name2 = user2.display_name if pvp else user2
 
-    # ✅ THIS is where your line goes
-    dmg1 = await calculate_damage(user1.id, trion1, side1, triggers1, stats1)
-    dmg2 = await calculate_damage(user1.id, trion2, side2, [], stats2)
+        battle_log = f"**Battle Start!**\n"
+        battle_log += f"{name1} deals {dmg1} damage.\n"
+        battle_log += f"{name2} deals {dmg2} damage.\n"
 
-    # Battle log
-    name1 = user1.display_name
-    name2 = user2.display_name if pvp else user2
+        # Determine winner
+        if dmg1 > dmg2:
+            winner_elo = win_elo(elo1)
+            loser_elo = lose_elo(elo2)
+            wins1 += 1
+            losses2 += 1
+            battle_log += f"🏆 **Winner: {name1}**"
+        elif dmg2 > dmg1:
+            winner_elo = win_elo(elo2)
+            loser_elo = lose_elo(elo1)
+            wins2 += 1
+            losses1 += 1
+            battle_log += f"🏆 **Winner: {name2}**"
+        else:
+            winner_elo = elo1
+            loser_elo = elo2
+            battle_log += "⚔️ **It's a tie!**"
 
-    battle_log = f"**Battle Start!**\n"
-    battle_log += f"{name1} deals {dmg1} damage.\n"
-    battle_log += f"{name2} deals {dmg2} damage.\n"
-
-    # Winner logic
-    if dmg1 > dmg2:
-        winner_elo = win_elo(elo1)
-        loser_elo = lose_elo(elo2)
-        wins1 += 1
-        losses2 += 1
-        battle_log += f"🏆 **Winner: {name1}**"
-    elif dmg2 > dmg1:
-        winner_elo = win_elo(elo2)
-        loser_elo = lose_elo(elo1)
-        wins2 += 1
-        losses1 += 1
-        battle_log += f"🏆 **Winner: {name2}**"
-    else:
-        winner_elo = elo1
-        loser_elo = elo2
-        battle_log += "⚔️ **It's a tie!**"
-
-    # Update DB
-    async with aiosqlite.connect(DB_NAME) as db:
-        await db.execute(
-            "UPDATE agents SET elo=?, wins=?, losses=? WHERE user_id=?",
-            (winner_elo if dmg1 > dmg2 else loser_elo, wins1, losses1, user1.id)
-        )
-
-        if pvp:
+        # Update DB
+        async with aiosqlite.connect(DB_NAME) as db:
             await db.execute(
                 "UPDATE agents SET elo=?, wins=?, losses=? WHERE user_id=?",
-                (winner_elo if dmg2 > dmg1 else loser_elo, wins2, losses2, user2.id)
+                (winner_elo if dmg1 > dmg2 else loser_elo, wins1, losses1, user1.id)
             )
+            if pvp:
+                await db.execute(
+                    "UPDATE agents SET elo=?, wins=?, losses=? WHERE user_id=?",
+                    (winner_elo if dmg2 > dmg1 else loser_elo, wins2, losses2, user2.id)
+                )
+            await db.commit()
 
-        await db.commit()
-
-    embed = discord.Embed(
-        title="⚔️ Arena Battle",
-        description=battle_log,
-        color=0x1abc9c
-    )
-
-    try:
-        await user1.send(embed=embed)
-    except:
-        pass
-
-    if pvp:
+        # Send embed
+        embed = discord.Embed(
+            title="⚔️ Arena Battle",
+            description=battle_log,
+            color=0x1abc9c
+        )
         try:
-            await user2.send(embed=embed)
+            await user1.send(embed=embed)
         except:
             pass
+
+        if pvp:
+            try:
+                await user2.send(embed=embed)
+            except:
+                pass
 
 async def setup(bot):
     await bot.add_cog(Arena(bot))
