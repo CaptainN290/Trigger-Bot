@@ -133,6 +133,33 @@ stats2 = {"attack": 1, "defense": 1, "mobility": 1, "intelligence": 1, "trion_co
 dmg1 = calculate_damage(trion1, side1, triggers1, stats1)
 dmg2 = calculate_damage(trion2, side2, [], stats2)
 
+# Give XP to used triggers
+async with aiosqlite.connect(DB_NAME) as db:
+    for trigger in triggers1:
+        await db.execute("""
+        INSERT INTO trigger_mastery (user_id, trigger, xp, level)
+        VALUES (?,?,10,1)
+        ON CONFLICT(user_id, trigger)
+        DO UPDATE SET xp = xp + 10
+        """, (user1.id, trigger))
+
+    await db.commit()
+
+cursor = await db.execute(
+    "SELECT xp, level FROM trigger_mastery WHERE user_id=? AND trigger=?",
+    (user1.id, trigger)
+)
+data = await cursor.fetchone()
+
+xp, level = data
+
+if xp >= level * 100:
+    level += 1
+    await db.execute(
+        "UPDATE trigger_mastery SET level=? WHERE user_id=? AND trigger=?",
+        (level, user1.id, trigger)
+    )
+
         battle_log = f"**Battle Start!**\n"
         battle_log += f"{user1.display_name if pvp else user1} deals {dmg1} damage.\n"
         battle_log += f"{user2.display_name if pvp else user2} deals {dmg2} damage.\n"
