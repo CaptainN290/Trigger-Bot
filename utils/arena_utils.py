@@ -95,3 +95,8 @@ def win_elo(current_elo):
 
 def lose_elo(current_elo):
     return max(current_elo - 25, 0)
+
+if side_effect:
+    if side_effect.get("passive") == "crit":
+        if random.random() < 0.2:
+            damage *= 1.5
