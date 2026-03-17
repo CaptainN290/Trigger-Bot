@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 
 from config import TOKEN, DB_NAME
+print(f"TOKEN LOADED: {bool(TOKEN)}")
 
 intents = discord.Intents.default()
 
