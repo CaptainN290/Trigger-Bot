@@ -721,3 +721,45 @@ ELO
 Credits
 Division ranking
 Triggers
+
+STAT SYSTEM
+
+Agents now have stats.
+
+Attack Potency
+Defense
+Mobility
+Intelligence
+Trion Control
+Perception
+
+Stats affect arena combat and trigger usage.
+
+Commands:
+
+/stats
+/upgradestat
+
+------------------------------------------------
+
+SQUAD SYSTEM
+
+Agents can form squads.
+
+Commands:
+
+/squadcreate
+/squadinvite
+/squadjoin
+/squadleave
+/squadinfo
+/squaddisband
+
+Squad size:
+
+1 Leader
+4 Members
+
+Max: 5
+
+Squads compete in Rank Wars.
