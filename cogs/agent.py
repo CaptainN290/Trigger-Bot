@@ -45,6 +45,7 @@ class Agent(commands.Cog):
             # Roll stats
             trion = roll_trion()
             side = roll_side_effect()
+            side_json = json.dumps(side) if side else None
 
             spins = 5
             credits = 100
@@ -54,7 +55,7 @@ class Agent(commands.Cog):
                 """
                 INSERT INTO agents VALUES(?,?,?,?,?,?,?,?)
                 """,
-                (user_id, trion, side, spins, credits, 1000, 0, 0)
+                (user_id, trion, side_json, spins, credits, 1000, 0, 0)
             )
 
             # Create Stat Profile
