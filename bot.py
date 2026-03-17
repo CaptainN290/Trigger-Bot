@@ -2,8 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 
-from config import TOKEN
-from config import setup_db
+from config import TOKEN, DB_NAME
 
 intents = discord.Intents.default()
 
