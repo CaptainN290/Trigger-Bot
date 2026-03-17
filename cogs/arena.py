@@ -69,7 +69,7 @@ class Arena(commands.Cog):
         self.queue.append((interaction.user, player))
         await asyncio.sleep(5)  # matchmaking wait
 
-# PvP matchmaking
+        # PvP matchmaking
         opponent = None
         for queued in self.queue:
             if queued[0].id != user_id:
