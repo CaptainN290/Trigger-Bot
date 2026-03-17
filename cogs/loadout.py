@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 import aiosqlite
 
-from db_config import DB_NAME
+from config import DB_NAME
 from data.triggers import TRIGGERS
 
 SLOTS = ["Main", "Sub", "Optional"]
