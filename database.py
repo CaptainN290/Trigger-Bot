@@ -142,6 +142,15 @@ async def init_db():
         )
         """)
 
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS trigger_mastery (
+            user_id INTEGER,
+            trigger TEXT,
+            xp INTEGER DEFAULT 0,
+            level INTEGER DEFAULT 1,
+            PRIMARY KEY (user_id, trigger)
+        )
+        """)
         await db.commit()
 
         # -------------------------
