@@ -412,3 +412,220 @@ Story Mode
 - Commands: /story (view mission), /mission (start mission)
 - Mission progression tracked; non-replayable missions auto-progress
 - Fully integrated with economy, loadouts, and profile system
+
+
+WORLD TRIGGER DISCORD BOT DEV MEMORY
+
+Language:
+Python
+
+Library:
+discord.py
+
+Commands:
+Slash Commands ONLY
+
+Hosting:
+Render / Wispbyte
+
+Database:
+SQLite (aiosqlite)
+
+------------------------------------------------
+
+PROJECT STRUCTURE
+
+bot.py
+config.py
+database.py
+requirements.txt
+
+cogs/
+    agent.py
+    profile.py
+    arena.py
+    story.py
+    codes.py
+
+data/
+    trion.py
+    side_effects.py
+    neighbors.py
+    triggers.py
+
+utils/
+    elo.py
+    arena_utils.py
+
+------------------------------------------------
+
+AGENT SYSTEM
+
+Agents have:
+
+Trion
+Side Effect
+Spins
+Credits
+ELO
+Wins
+Losses
+
+------------------------------------------------
+
+TRION LEVELS
+
+Range:
+
+2-6   Low
+7-12  Average
+13-20 High
+21-38 Extremely Rare
+
+Examples:
+
+Osamu Mikumo = 2
+Yuma Kuga = 7
+Chika Amatori = 38
+
+Higher Trion gives stat buffs in arena combat.
+
+------------------------------------------------
+
+SIDE EFFECT SYSTEM
+
+60% chance to obtain.
+
+Types:
+
+Common
+Rare
+
+Side effects give combat bonuses.
+
+------------------------------------------------
+
+SPIN SYSTEM
+
+Spins reroll:
+
+Trion
+Side Effect
+
+Players can earn spins through:
+
+Story
+Events
+Redeem Codes
+
+------------------------------------------------
+
+GAME MODES
+
+Story Mode
+Missions
+Solo Arena
+Rank Wars
+
+------------------------------------------------
+
+SOLO ARENA
+
+Player vs Player matchmaking.
+
+If no player found:
+AI opponent is generated.
+
+Win:
++25 ELO
+
+Loss:
+-25 ELO
+
+Leaderboard based on ELO.
+
+------------------------------------------------
+
+ECONOMY
+
+Currency:
+Credits
+
+Credits buy triggers.
+
+Triggers include:
+
+Grasshopper
+Escudo
+Spider
+Bagworm
+Chameleon
+
+------------------------------------------------
+
+STORY MODE
+
+Structure:
+
+Arc
+Chapter
+Mission
+
+Mission Types:
+
+Exploration
+Choice Event
+Arena PvE
+Boss Fight
+
+Rewards:
+
+Credits
+Spins
+Triggers
+
+Some missions are replayable for farming.
+
+------------------------------------------------
+
+PROFILE SYSTEM
+
+Profiles display:
+
+Trion
+Side Effect
+ELO
+Wins/Losses
+Triggers
+
+Future upgrade:
+Generated Profile Image Cards.
+
+------------------------------------------------
+
+REDEEM CODE SYSTEM (PLANNED)
+
+Admins can create codes:
+
+Example:
+
+merrychristmas
+
+Rewards:
+
+Credits
+Spins
+Triggers
+
+Codes stored in DB.
+
+------------------------------------------------
+
+DEVELOPMENT RULE
+
+Whenever a new system is added:
+
+1 Update database tables if needed
+2 Add commands in a new Cog
+3 Use Slash Commands ONLY
+4 Update DEV_MEMORY.md
