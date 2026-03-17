@@ -650,3 +650,74 @@ loadouts
 
 Future upgrade:
 Trigger slots (Main/Sub/Optional)
+
+STAT SYSTEM
+
+Agents have stats:
+
+Attack Potency
+Defense
+Mobility
+Intelligence
+Trion Control
+Perception
+
+Players earn Stat Points and allocate them using:
+
+/stats
+/upgradestat
+
+Stats affect arena combat and trigger usage.
+
+------------------------------------------------
+
+SQUAD SYSTEM
+
+Agents can form squads.
+
+Commands:
+
+/squadcreate
+/squadinvite
+/squadjoin
+/squadleave
+/squadinfo
+/squaddisband
+
+Squad limit:
+
+1 Leader
+4 Members
+
+Maximum squad size: 5
+
+------------------------------------------------
+
+DIVISION SYSTEM
+
+Squads compete in divisions.
+
+Divisions:
+
+C-Rank
+B-Rank
+A-Rank
+S-Rank
+
+------------------------------------------------
+
+RANK WARS
+
+Squad vs Squad combat event.
+
+Commands:
+
+/rankwarqueue
+/rankleaderboard
+
+Rank Wars reward:
+
+ELO
+Credits
+Division ranking
+Triggers
