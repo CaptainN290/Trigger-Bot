@@ -5,7 +5,7 @@ import aiosqlite
 import asyncio
 import json
 import random
-from db_config import DB_NAME
+from config import DB_NAME
 from utils.arena_utils import calculate_damage, win_elo, lose_elo
 from data.neighbors import random_neighbor
 
