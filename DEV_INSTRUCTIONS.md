@@ -763,3 +763,44 @@ Squad size:
 Max: 5
 
 Squads compete in Rank Wars.
+
+
+STAT SYSTEM
+
+Agents have stats:
+
+Attack Potency
+Defense
+Mobility
+Intelligence
+Trion Control
+Perception
+
+Stats affect arena combat and trigger usage.
+
+Commands:
+
+/stats
+/upgradestat
+
+------------------------------------------------
+
+SQUAD SYSTEM
+
+Agents can form squads.
+
+Commands:
+
+/squadcreate
+/squadinvite
+/squadinfo
+/squadleave
+
+Squad size:
+
+1 Leader
+4 Members
+
+Max: 5
+
+Squads compete in Rank Wars.
