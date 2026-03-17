@@ -23,6 +23,21 @@ async def load_cogs():
     await bot.load_extension("cogs.leaderboard")
 
 @bot.event
+async def on_message(message):
+    # Ignore messages from the bot itself
+    if message.author.bot:
+        return
+
+    # Check if bot is mentioned
+    if bot.user in message.mentions:
+        await message.channel.send(
+            f"Hello {message.author.mention}! To start your Border journey, use **/joinborder**."
+        )
+
+    # Allow commands to still work
+    await bot.process_commands(message)
+
+@bot.event
 async def on_ready():
 
     await setup_db()
