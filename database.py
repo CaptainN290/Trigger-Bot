@@ -41,7 +41,8 @@ async def init_db():
         CREATE TABLE IF NOT EXISTS loadouts (
             user_id INTEGER,
             trigger TEXT,
-            PRIMARY KEY (user_id, trigger)
+            slot TEXT,
+            PRIMARY KEY (user_id, slot)
         )
         """)
 
