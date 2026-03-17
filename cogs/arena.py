@@ -105,8 +105,33 @@ class Arena(commands.Cog):
             cursor = await db.execute("SELECT trigger FROM loadouts WHERE user_id=?", (user1.id,))
             triggers1 = [row[0] for row in await cursor.fetchall()]
 
-        dmg1 = calculate_damage(trion1, side1, triggers1)
-        dmg2 = calculate_damage(trion2, side2)  # AI has no triggers by default
+        import json
+
+side1 = json.loads(side1) if side1 else None
+side2 = json.loads(side2) if side2 else None
+
+# Get stats
+async with aiosqlite.connect(DB_NAME) as db:
+    cursor = await db.execute(
+        "SELECT attack, defense, mobility, intelligence, trion_control, perception FROM agent_stats WHERE user_id=?",
+        (user1.id,)
+    )
+    stats1 = await cursor.fetchone()
+
+stats1 = {
+    "attack": stats1[0],
+    "defense": stats1[1],
+    "mobility": stats1[2],
+    "intelligence": stats1[3],
+    "trion_control": stats1[4],
+    "perception": stats1[5],
+}
+
+# AI stats (basic)
+stats2 = {"attack": 1, "defense": 1, "mobility": 1, "intelligence": 1, "trion_control": 1, "perception": 1}
+
+dmg1 = calculate_damage(trion1, side1, triggers1, stats1)
+dmg2 = calculate_damage(trion2, side2, [], stats2)
 
         battle_log = f"**Battle Start!**\n"
         battle_log += f"{user1.display_name if pvp else user1} deals {dmg1} damage.\n"
