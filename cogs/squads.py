@@ -2,7 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import aiosqlite
-from database import DB_NAME
+from db_config import DB_NAME
 
 COLOR = 0x1abc9c
 
