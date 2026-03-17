@@ -1,41 +1,89 @@
 import random
 from utils.elo import win_elo, lose_elo
 
-# Simple combat calculation
-def calculate_damage(trion, side_effect):
-    base = trion * 10
+# Example stat points dict structure:
+# stats = {
+#   "attack": 3,
+#   "defense": 2,
+#   "mobility": 2,
+#   "intelligence": 1,
+#   "trion_control": 2,
+#   "perception": 1
+# }
+
+# Triggers buff dictionary
+TRIGGER_BUFFS = {
+    "Grasshopper": {"mobility": 2},
+    "Escudo": {"defense": 3},
+    "Spider": {"attack": 2},
+    "Bagworm": {"mobility": 1, "attack": 1},
+    "Chameleon": {"evasion": 3}  # e.g., could reduce damage taken
+}
+
+# Side effects buff example (already integrated in side_effects.py)
+# side_effect = {"name": "Combat Instinct", "buffs": {"attack": 2, "mobility": 1}}
+
+def calculate_damage(trion: int, side_effect: dict = None, triggers: list = None, stats: dict = None):
+    """
+    Calculates damage in arena battles.
+    - trion: agent's Trion level
+    - side_effect: dict from roll_side_effect (name + buffs)
+    - triggers: list of equipped triggers
+    - stats: agent stats dict
+    """
+    if stats is None:
+        stats = {"attack": 1, "defense": 1, "mobility": 1, "intelligence": 1, "trion_control": 1, "perception": 1}
+
+    base = trion * 10  # Base damage scales with Trion
     buff = 0
 
+    # Apply side effect buffs
     if side_effect:
-        if side_effect == "Enhanced Vision":
-            buff += 5
-        elif side_effect == "Enhanced Hearing":
-            buff += 3
-        elif side_effect == "Emotion Detection":
-            buff += 4
-        elif side_effect == "Future Sight":
-            buff += 10
-        elif side_effect == "Lie Detection":
-            buff += 8
-        elif side_effect == "Combat Instinct":
-            buff += 9
+        for stat, value in side_effect.get("buffs", {}).items():
+            if stat == "attack":
+                buff += value * 5  # Each attack point adds 5 damage
+            elif stat == "mobility":
+                buff += value * 2  # Mobility slightly increases damage
+            elif stat == "perception":
+                buff += value * 2  # Better accuracy
+            elif stat == "intelligence":
+                buff += value * 3  # Smarter attacks
+            elif stat == "trion_control":
+                buff += value * 4  # Better Trion efficiency
+            elif stat == "defense":
+                buff += value  # Minor bonus
+            elif stat == "evasion":
+                buff += value * 1  # Minor bonus
 
-    damage = base + random.randint(0, 10) + buff
-    return damage
-
- # Trigger buffs
+    # Apply trigger buffs
     if triggers:
         for trig in triggers:
-            if trig == "Grasshopper":
-                buff += 5  # Mobility bonus
-            elif trig == "Escudo":
-                buff += 3  # Defensive bonus
-            elif trig == "Spider":
-                buff += 4
-            elif trig == "Bagworm":
-                buff += 6  # Stealth bonus
-            elif trig == "Chameleon":
-                buff += 7  # Evasion bonus
+            trig_buff = TRIGGER_BUFFS.get(trig, {})
+            for stat, value in trig_buff.items():
+                if stat == "attack":
+                    buff += value * 5
+                elif stat == "mobility":
+                    buff += value * 2
+                elif stat == "defense":
+                    buff += value * 3
+                elif stat == "evasion":
+                    buff += value * 1
 
-    damage = base + random.randint(0,10) + buff
+    # Apply raw stats
+    buff += stats.get("attack", 1) * 5
+    buff += stats.get("mobility", 1) * 2
+    buff += stats.get("intelligence", 1) * 3
+    buff += stats.get("trion_control", 1) * 4
+    buff += stats.get("perception", 1) * 2
+    buff += stats.get("defense", 1) * 1
+
+    # Add small randomness
+    damage = base + buff + random.randint(0, 10)
     return damage
+
+# Example ELO adjustment (unchanged)
+def win_elo(current_elo):
+    return current_elo + 25
+
+def lose_elo(current_elo):
+    return max(current_elo - 25, 0)
