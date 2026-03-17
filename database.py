@@ -97,6 +97,24 @@ async def init_db():
             stat_points INTEGER DEFAULT 0
         )
         """)
+
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS squads (
+            squad_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE,
+            leader_id INTEGER,
+            division TEXT DEFAULT 'C-Rank',
+            elo INTEGER DEFAULT 1000
+        )
+        """)
+
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS squad_members (
+            squad_id INTEGER,
+            user_id INTEGER,
+            role TEXT
+        )
+        """)
         
         await db.commit()
 
