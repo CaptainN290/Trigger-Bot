@@ -629,3 +629,24 @@ Whenever a new system is added:
 2 Add commands in a new Cog
 3 Use Slash Commands ONLY
 4 Update DEV_MEMORY.md
+
+
+TRIGGER SYSTEM
+
+Players can purchase triggers using Credits.
+
+Commands:
+
+/shop
+/buytrigger
+/inventory
+/equiptrigger
+
+Triggers are stored in DB table:
+triggers
+
+Equipped triggers stored in:
+loadouts
+
+Future upgrade:
+Trigger slots (Main/Sub/Optional)
