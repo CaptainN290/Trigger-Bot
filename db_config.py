@@ -1,9 +1,6 @@
 import aiosqlite
 from populate_story import populate_story
 
-DB_NAME = "world_trigger.db"
-
-
 async def init_db():
     async with aiosqlite.connect(DB_NAME) as db:
 
