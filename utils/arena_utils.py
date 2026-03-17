@@ -2,7 +2,7 @@ import random
 from utils.elo import win_elo, lose_elo
 from data.triggers import TRIGGERS
 
-def calculate_damage(trion: int, side_effect: dict = None, triggers: list = None, stats: dict = None):
+async def calculate_damage(user_id, trion, side_effect=None, triggers=None, stats=None):
     """
     Calculates damage in arena battles.
     - trion: Agent's Trion level
