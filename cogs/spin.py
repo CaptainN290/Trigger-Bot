@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 import aiosqlite
 import random
-from database import DB_NAME
+from db_config import DB_NAME
 from data.trion import roll_trion
 from data.side_effects import roll_side_effect
 
