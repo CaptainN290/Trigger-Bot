@@ -804,3 +804,25 @@ Squad size:
 Max: 5
 
 Squads compete in Rank Wars.
+
+
+JOINBORDER COMMAND
+
+/joinborder
+
+Creates new Border agent.
+
+Creates database entries:
+
+agents
+agent_stats
+story_progress
+
+Rolls:
+- Trion level
+- Side effect (60%)
+
+Starting rewards:
+
+5 spins
+100 credits
