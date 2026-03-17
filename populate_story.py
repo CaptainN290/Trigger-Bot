@@ -1,5 +1,4 @@
 import aiosqlite
-import asyncio
 import json
 from database import DB_NAME
 
@@ -117,5 +116,3 @@ async def populate_story():
 
         await db.commit()
         print("✅ Story missions populated successfully!")
-
-asyncio.run(populate_story())
