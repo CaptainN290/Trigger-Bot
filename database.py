@@ -85,6 +85,19 @@ async def init_db():
         )
         """)
 
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS agent_stats (
+            user_id INTEGER PRIMARY KEY,
+            attack INTEGER DEFAULT 1,
+            defense INTEGER DEFAULT 1,    
+            mobility INTEGER DEFAULT 1,
+            intelligence INTEGER DEFAULT 1,
+            trion_control INTEGER DEFAULT 1,
+            perception INTEGER DEFAULT 1,
+            stat_points INTEGER DEFAULT 0
+        )
+        """)
+        
         await db.commit()
 
 cursor = await db.execute("SELECT COUNT(*) FROM story_missions")
