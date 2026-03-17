@@ -1,17 +1,16 @@
 import discord
 from discord.ext import commands
 import asyncio
+import traceback
 
 from config import TOKEN, DB_NAME
+
 print(f"TOKEN LOADED: {bool(TOKEN)}")
 
 intents = discord.Intents.default()
+bot = commands.Bot(command_prefix="!", intents=intents)
 
-bot = commands.Bot(
-    command_prefix="!",
-    intents=intents
-)
-
+# List of all cogs
 COGS = [
     "cogs.agent",
     "cogs.profile",
@@ -26,14 +25,36 @@ COGS = [
     "cogs.story"
 ]
 
+# ------------------ Cog Loader ------------------
 async def load_cogs():
     for cog in COGS:
-        print(f"Loading {cog}...")
+        print(f"📦 Loading {cog}...")
         try:
             await bot.load_extension(cog)
             print(f"✅ Loaded {cog}")
-        except Exception as e:
-            print(f"❌ Failed {cog}: {e}")
+        except Exception:
+            print(f"❌ Failed to load {cog}:")
+            traceback.print_exc()
+
+# ------------------ Events ------------------
+@bot.event
+async def on_ready():
+    print(f"🔑 Logged in as {bot.user}")
+    
+    # Setup database if you have this function
+    try:
+        await setup_db()
+        print("🗄️ Database ready")
+    except NameError:
+        print("⚠️ setup_db() not defined, skipping DB setup")
+
+    # Sync slash commands
+    try:
+        synced = await bot.tree.sync()
+        print(f"⚡ Synced {len(synced)} commands")
+    except Exception:
+        print("❌ Failed to sync commands:")
+        traceback.print_exc()
 
 @bot.event
 async def on_message(message):
@@ -50,31 +71,20 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-@bot.event
-async def on_ready():
-
-    await setup_db()
-
-    try:
-        synced = await bot.tree.sync()
-        print(f"Synced {len(synced)} commands")
-
-    except Exception as e:
-        print(e)
-
-    print(f"Logged in as {bot.user}")
-
+# ------------------ Main ------------------
 async def main():
     print("🚀 Starting bot...")
 
     try:
-        async with bot:
-            print("📦 Loading cogs...")
-            await load_cogs()
+        # Load all cogs first
+        await load_cogs()
+        
+        # Start the bot
+        print("🔥 Connecting to Discord...")
+        await bot.start(TOKEN)
+    except Exception:
+        print("❌ Bot crashed:")
+        traceback.print_exc()
 
-            print("🔥 Starting Discord connection...")
-            await bot.start(TOKEN)
-
-    except Exception as e:
-        print(f"❌ MAIN ERROR: {e}")
-
+if __name__ == "__main__":
+    asyncio.run(main())
