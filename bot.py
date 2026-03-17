@@ -54,8 +54,14 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
 
 async def main():
+    print("🚀 Starting bot...")
 
-    async with bot:
-        await load_cogs()
-        await bot.start(TOKEN)
+    try:
+        async with bot:
+            await load_cogs()
+            print("✅ Cogs loaded, starting bot...")
+            await bot.start(TOKEN)
+
+    except Exception as e:
+        print(f"❌ MAIN ERROR: {e}")
 
