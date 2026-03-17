@@ -845,3 +845,52 @@ Features:
 Files:
 - cogs/profile.py
 - utils/profile_card.py
+
+NEW SYSTEMS ADDED
+
+Trigger Mastery System
+	•	Triggers gain XP on use
+	•	XP stored in trigger_mastery table
+	•	Level up formula: xp >= level * 100
+	•	Each level gives bonus damage (+ level * 2)
+
+⸻
+
+Side Effects System (UPDATED)
+	•	Now stored as JSON
+	•	Structure:
+    {
+  "name": "Combat Instinct",
+  "buffs": {"attack": 2},
+  "passive": "crit"
+}
+
+Passive Abilities
+	•	crit → 20% chance 1.5x damage
+	•	dodge → 20% chance avoid damage
+	•	trion_save → restores trion
+
+⸻
+
+Loadout System (UPDATED)
+	•	3 slots:
+	•	Main
+	•	Sub
+	•	Optional
+
+⸻
+
+Stat Requirements
+	•	Triggers require stats (e.g. Intelligence)
+	•	Checked in /equip
+
+⸻
+
+🚨 FINAL WARNING (VERY IMPORTANT)
+
+If you DON’T:
+	•	convert side_effect using JSON
+	•	make calculate_damage async
+	•	pass user_id
+
+👉 your system WILL break silently
