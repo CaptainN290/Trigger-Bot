@@ -826,3 +826,22 @@ Starting rewards:
 
 5 spins
 100 credits
+
+
+PROFILE CARD SYSTEM
+
+Command:
+- /profile
+
+Features:
+- Visual profile card with avatar, stats, triggers, story progress
+- Stats displayed numerically
+- Shows main trigger, sub trigger, optional trigger
+- Turquoise color theme
+- Automatically updates and deletes old images
+- Story progress: Arc → Mission
+- Fetches data from agents, agent_stats, loadouts, story_progress
+
+Files:
+- cogs/profile.py
+- utils/profile_card.py
