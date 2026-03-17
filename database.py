@@ -1,5 +1,5 @@
 import aiosqlite
-
+from populate_story import populate_story
 DB_NAME = "world_trigger.db"
 
 async def init_db():
@@ -86,6 +86,12 @@ async def init_db():
         """)
 
         await db.commit()
+
+cursor = await db.execute("SELECT COUNT(*) FROM story_missions")
+count = await cursor.fetchone()
+
+if count[0] == 0:
+    await populate_story()
 
 import aiosqlite
 from populate_story import populate_story  # import the script as a function
