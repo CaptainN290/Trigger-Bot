@@ -67,6 +67,16 @@ def calculate_damage(trion: int, side_effect: dict = None, triggers: list = None
                     elif stat == "perception":
                         buff += value * 2
 
+# Get mastery level
+cursor = await db.execute(
+    "SELECT level FROM trigger_mastery WHERE user_id=? AND trigger=?",
+    (user_id, trig_name)
+)
+result = await cursor.fetchone()
+level = result[0] if result else 1
+
+buff += level * 2
+    
     # --- Apply Raw Stats ---
     buff += stats.get("attack", 1) * 5
     buff += stats.get("mobility", 1) * 2
