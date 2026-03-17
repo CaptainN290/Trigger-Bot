@@ -69,7 +69,7 @@ class Arena(commands.Cog):
         self.queue.append((interaction.user, player))
         await asyncio.sleep(5)  # matchmaking wait
 
-        # PvP matchmaking
+# PvP matchmaking
         opponent = None
         for queued in self.queue:
             if queued[0].id != user_id:
@@ -94,7 +94,7 @@ class Arena(commands.Cog):
                 total_enemy_hp += hp
                 total_enemy_dmg += dmg
             ai_name = f"Neighbor Wave: {', '.join(enemy_names)}"
-            ai_stats = (total_enemy_hp//10, None, 1000, 0, 0)  # Simplified AI stats
+            ai_stats = (total_enemy_hp // 10, None, 1000, 0, 0)  # Simplified AI stats
             await self.start_battle(interaction.user, player, ai_name, ai_stats, pvp=False)
 
     async def start_battle(self, user1, stats1, user2, stats2, pvp=True):
