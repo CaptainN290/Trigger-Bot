@@ -1,9 +1,8 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-
+import json
 import aiosqlite
-
 from database import DB_NAME
 from data.trion import roll_trion
 from data.side_effects import roll_side_effect
