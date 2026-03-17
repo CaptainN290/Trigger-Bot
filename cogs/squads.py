@@ -58,57 +58,71 @@ class Squads(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="squadinvite", description="Invite a player to your squad")
-    async def squadinvite(self, interaction: discord.Interaction, member: discord.Member):
+async def squadinvite(self, interaction: discord.Interaction, member: discord.Member):
 
-        inviter = interaction.user.id
-        target = member.id
+    inviter = interaction.user.id
+    target = member.id
 
-        async with aiosqlite.connect(DB_NAME) as db:
+    async with aiosqlite.connect(DB_NAME) as db:
 
-            cursor = await db.execute(
-                "SELECT squad_id FROM squads WHERE leader_id=?",
-                (inviter,)
+        # Check inviter squad + role
+        cursor = await db.execute(
+            "SELECT squad_id, role FROM squad_members WHERE user_id=?",
+            (inviter,)
+        )
+        inviter_data = await cursor.fetchone()
+
+        if not inviter_data or inviter_data[1] != "Leader":
+            await interaction.response.send_message(
+                "Only squad leaders can invite players.",
+                ephemeral=True
             )
+            return
 
-            squad = await cursor.fetchone()
+        squad_id = inviter_data[0]
 
-            if not squad:
-                await interaction.response.send_message(
-                    "Only squad leaders can invite players.",
-                    ephemeral=True
-                )
-                return
-
-            squad_id = squad[0]
-
-            cursor = await db.execute(
-                "SELECT COUNT(*) FROM squad_members WHERE squad_id=?",
-                (squad_id,)
-            )
-
-            count = (await cursor.fetchone())[0]
-
-            if count >= 5:
-                await interaction.response.send_message(
-                    "Squad is full.",
-                    ephemeral=True
-                )
-                return
-
-            await db.execute(
-                "INSERT INTO squad_members (squad_id, user_id, role) VALUES (?,?,?)",
-                (squad_id, target, "Member")
-            )
-
-            await db.commit()
-
-        embed = discord.Embed(
-            title="📨 Squad Invite",
-            description=f"{member.mention} has joined your squad.",
-            color=COLOR
+        # Check target already in squad
+        cursor = await db.execute(
+            "SELECT 1 FROM squad_members WHERE user_id=?",
+            (target,)
         )
 
-        await interaction.response.send_message(embed=embed)
+        if await cursor.fetchone():
+            await interaction.response.send_message(
+                "That player is already in a squad.",
+                ephemeral=True
+            )
+            return
+
+        # Check squad size
+        cursor = await db.execute(
+            "SELECT COUNT(*) FROM squad_members WHERE squad_id=?",
+            (squad_id,)
+        )
+        count = (await cursor.fetchone())[0]
+
+        if count >= 5:
+            await interaction.response.send_message(
+                "Squad is full.",
+                ephemeral=True
+            )
+            return
+
+        # Add member
+        await db.execute(
+            "INSERT INTO squad_members (squad_id, user_id, role) VALUES (?,?,?)",
+            (squad_id, target, "Member")
+        )
+
+        await db.commit()
+
+    await interaction.response.send_message(
+        embed=discord.Embed(
+            title="📨 Squad Update",
+            description=f"{member.mention} joined your squad.",
+            color=0x1abc9c
+        )
+    )
 
     @app_commands.command(name="squadinfo", description="View squad info")
     async def squadinfo(self, interaction: discord.Interaction):
