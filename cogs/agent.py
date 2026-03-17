@@ -105,7 +105,7 @@ class Agent(commands.Cog):
 
         embed.add_field(
             name="🧬 Side Effect",
-            value=side if side else "None",
+            value=side["name"] if side else "None",
             inline=True
         )
 
