@@ -53,7 +53,7 @@ async def calculate_damage(user_id, trion, side_effect=None, triggers=None, stat
                 remaining_trion -= cost
                 for stat, value in trig.get("buffs", {}).items():
                     if stat == "attack":
-                        buff += value * 5  # Attack potency applies to all attacks
+                        buff += value * 5
                     elif stat == "mobility":
                         buff += value * 2
                     elif stat == "defense":
@@ -67,11 +67,6 @@ async def calculate_damage(user_id, trion, side_effect=None, triggers=None, stat
                     elif stat == "perception":
                         buff += value * 2
 
-result = await cursor.fetchone()
-level = result[0] if result else 1
-
-buff += level * 2
-    
     # --- Apply Raw Stats ---
     buff += stats.get("attack", 1) * 5
     buff += stats.get("mobility", 1) * 2
@@ -82,10 +77,12 @@ buff += level * 2
 
     # --- Random variance ---
     damage = base + buff + random.randint(0, 10)
-    if side_effect:
-     if side_effect.get("passive") == "crit":
-         if random.random() < 0.2:
-             damage *= 1.5
+
+    # --- Passive side effects ---
+    if side_effect and side_effect.get("passive") == "crit":
+        if random.random() < 0.2:
+            damage *= 1.5
+
     return damage
 
 # --- ELO adjustments ---
