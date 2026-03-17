@@ -17,7 +17,7 @@ class Story(commands.Cog):
     async def story(self, interaction: discord.Interaction):
         user_id = interaction.user.id
         async with aiosqlite.connect(DB_NAME) as db:
-            cursor = await db.execute("SELECT arc, chapter, mission FROM story_progress WHERE user_id=?", (user_id,))
+            cursor = await db.execute("SELECT arc, chapter, mission WHERE user_id=?", (user_id,))
             progress = await cursor.fetchone()
             if not progress:
                 # Initialize
